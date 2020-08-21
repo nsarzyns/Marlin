@@ -491,10 +491,10 @@
 
   // If you are using a pre-configured hotend then you can use one of the value sets by uncommenting it
 
-  // Ender 3 Pro, non all metal hotend
-  #define DEFAULT_Kp 21.73
-  #define DEFAULT_Ki 1.54
-  #define DEFAULT_Kd 76.55
+  // Ender 3 Pro, all metal hotend, calculated with M303 E1 C10 S210
+  #define DEFAULT_Kp 26.76
+  #define DEFAULT_Ki 2.57
+  #define DEFAULT_Kd 69.73
 
 #endif // PIDTEMP
 
@@ -515,7 +515,7 @@
  * heater. If your configuration is significantly different than this and you don't understand
  * the issues involved, don't use bed PID until someone else verifies that your hardware works.
  */
-// #define PIDTEMPBED
+#define PIDTEMPBED
 
 //#define BED_LIMIT_SWITCHING
 
@@ -531,13 +531,10 @@
   //#define MIN_BED_POWER 0
   //#define PID_BED_DEBUG // Sends debug data to the serial port.
 
-  // Taken from BIQU source for SKR mini e3 V2. Run auto tune to find values
-  //#define DEFAULT_bedKp 50.71
-  //#define DEFAULT_bedKi 9.88
-  //#define DEFAULT_bedKd 173.43
-
-
-  // FIND YOUR OWN: "M303 E-1 C8 S90" to run autotune on the bed at 90 degreesC for 8 cycles.
+  // Ender 3 Pro Bed, OEM build plate. Calculated with M303 E-1 C10 S70
+  #define DEFAULT_bedKp 88.12
+  #define DEFAULT_bedKi 17.17
+  #define DEFAULT_bedKd 301.43
 #endif // PIDTEMPBED
 
 #if EITHER(PIDTEMP, PIDTEMPBED)
