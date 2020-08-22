@@ -71,7 +71,7 @@
 // @section info
 
 // Author info of this build printed to the host during boot and M115
-#define STRING_CONFIG_H_AUTHOR "(Nick Sarzynski, Ender 3)" // Who made the changes.
+#define STRING_CONFIG_H_AUTHOR "(Ender 3)" // Who made the changes.
 //#define CUSTOM_VERSION_FILE Version.h // Path from the root directory (no quotes)
 
 /**
@@ -491,10 +491,10 @@
 
   // If you are using a pre-configured hotend then you can use one of the value sets by uncommenting it
 
-  // Ender 3 Pro, all metal hotend, calculated with M303 E1 C10 S210
-  #define DEFAULT_Kp 26.76
-  #define DEFAULT_Ki 2.57
-  #define DEFAULT_Kd 69.73
+  // Ender 3 OG
+  #define DEFAULT_Kp 21.73
+  #define DEFAULT_Ki 1.54
+  #define DEFAULT_Kd 76.55
 
 #endif // PIDTEMP
 
@@ -532,9 +532,9 @@
   //#define PID_BED_DEBUG // Sends debug data to the serial port.
 
   // Ender 3 Pro Bed, OEM build plate. Calculated with M303 E-1 C10 S70
-  #define DEFAULT_bedKp 88.12
-  #define DEFAULT_bedKi 17.17
-  #define DEFAULT_bedKd 301.43
+  #define DEFAULT_bedKp 50.71
+  #define DEFAULT_bedKi 9.88
+  #define DEFAULT_bedKd 173.43
 #endif // PIDTEMPBED
 
 #if EITHER(PIDTEMP, PIDTEMPBED)
