@@ -16,16 +16,19 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 #pragma once
 
-/* DGUS implementation written by coldtobi in 2019 for Marlin */
+/**
+ * lcd/extui/lib/dgus/DGUSDisplay.h
+ */
 
 #include "../../../../inc/MarlinConfigPre.h"
 
-#include "../../../../MarlinCore.h"
+#include <stdlib.h>    // size_t
+
 #if HAS_BED_PROBE
   #include "../../../../module/probe.h"
 #endif
@@ -33,6 +36,7 @@
 
 enum DGUSLCD_Screens : uint8_t;
 
+//#define DEBUG_DGUSLCD
 #define DEBUG_OUT ENABLED(DEBUG_DGUSLCD)
 #include "../../../../core/debug_out.h"
 
@@ -57,7 +61,22 @@ public:
   static void WriteVariable(uint16_t adr, int16_t value);
   static void WriteVariable(uint16_t adr, uint16_t value);
   static void WriteVariable(uint16_t adr, uint8_t value);
+  static void WriteVariable(uint16_t adr, int8_t value);
   static void WriteVariable(uint16_t adr, long value);
+  static void MKS_WriteVariable(uint16_t adr, uint8_t value);
+
+
+  // Utility functions for bridging ui_api and dbus
+  template<typename T, float(*Getter)(const T), T selector, typename WireType=uint16_t>
+  static void SetVariable(DGUS_VP_Variable &var) {
+    WriteVariable(var.VP, (WireType)Getter(selector));
+  }
+
+  template<typename T, void(*Setter)(const float V, const T), T selector>
+  static void GetVariable(DGUS_VP_Variable &var, void *val_ptr) {
+    uint16_t newvalue = swap16(*(uint16_t*)val_ptr);
+    Setter(newvalue, selector);
+  }
 
   // Until now I did not need to actively read from the display. That's why there is no ReadVariable
   // (I extensively use the auto upload of the display)
@@ -83,10 +102,14 @@ private:
   static void WritePGM(const char str[], uint8_t len);
   static void ProcessRx();
 
+  static inline uint16_t swap16(const uint16_t value) { return (value & 0xFFU) << 8U | (value >> 8U); }
   static rx_datagram_state_t rx_datagram_state;
   static uint8_t rx_datagram_len;
   static bool Initialized, no_reentrance;
 };
+
+#define GET_VARIABLE(f, t, V...) (&DGUSDisplay::GetVariable<decltype(t), f, t, ##V>)
+#define SET_VARIABLE(f, t, V...) (&DGUSDisplay::SetVariable<decltype(t), f, t, ##V>)
 
 extern DGUSDisplay dgusdisplay;
 
